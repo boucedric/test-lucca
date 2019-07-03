@@ -9,7 +9,7 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  private readonly DEFAULT_LIMIT = '2';
+  private readonly DEFAULT_LIMIT = '5';
 
   public expensesToDisplay: ExpensesDto;
 
@@ -41,6 +41,17 @@ export class HomeComponent implements OnInit {
       });
   }
 
+  public handleExpenseChanged(params: {id: string, action: string}){
+    if (params.action === "DEL") {
+      this.expenseService.removeExpense(params.id).subscribe(
+        () => {
+          this.updateExpenses();
+        },
+        (err) => {
+          this.hasError = true;
+        });
+    }
+  }
   // this.expenseService.createExpense(expense).subscribe(
   //   (res) => {
   //     console.log('success', res);

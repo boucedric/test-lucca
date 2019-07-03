@@ -1,4 +1,4 @@
 <h1>{{"home.title" | translate}}</h1>
 <mat-spinner *ngIf="isLoading && !hasError"></mat-spinner>
-<app-expenses-list *ngIf="!hasError" [expenses]="expensesToDisplay"></app-expenses-list>
+<app-expenses-list *ngIf="!hasError" (expenseChanged)="handleExpenseChanged($event)" [expenses]="expensesToDisplay"></app-expenses-list>
 <p *ngIf="hasError">{{"error.default" | translate}}</p>

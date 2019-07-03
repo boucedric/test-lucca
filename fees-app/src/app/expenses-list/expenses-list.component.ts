@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ExpenseDto, ExpensesDto} from "../../model/ExpenseDto";
 
 @Component({
@@ -12,8 +12,11 @@ export class ExpensesListComponent implements OnInit, OnChanges {
 
   public itemExpenses: ExpenseDto[] = [];
 
-  public displayedColumns: string[] = ['purchasedOn', "nature", "comment", "convertedAmount.amount"];
+  public displayedColumns: string[] = ['purchasedOn', "nature", "comment", "convertedAmount.amount", "id"];
   constructor() { }
+
+  @Output()
+  public expenseChanged = new EventEmitter<{id: string, action: string}>();
 
   ngOnInit() {
   }
@@ -22,5 +25,13 @@ export class ExpensesListComponent implements OnInit, OnChanges {
     if (changes.expenses.currentValue) {
       this.itemExpenses = this.expenses.items;
     }
+  }
+
+  public modifyItem(id) {
+    this.expenseChanged.emit({id, action: "MOD"});
+  }
+
+  public deleteItem(id) {
+    this.expenseChanged.emit({id, action: "DEL"});
   }
 }
