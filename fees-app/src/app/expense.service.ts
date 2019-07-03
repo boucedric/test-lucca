@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import { HttpHeaders } from '@angular/common/http';
 import {Observable} from "rxjs/internal/Observable";
-import {Expense} from "../model/Expense";
+import {ExpensePostDto, ExpensesDto} from "../model/ExpenseDto";
+
+export interface ExpensesFilter {
+  offset?: string,
+  limit?: string,
+  purchasedOn?: string,
+  createdAt?: string,
+  lastModifiedAt?: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +25,12 @@ export class ExpenseService {
   constructor(private httpClient: HttpClient) { }
 
   /**
-   * Get all expenses or some expenses depending params conditions
+   * Get all expensesToDisplay or some expensesToDisplay depending params conditions
    * @returns {Observable<Object>}
    */
-  public getExpenses(params?: {offset?: number, limit?: number}) :Observable<any> {
-    const opt = typeof params !== 'undefined' ? {...this.HTTP_OPT, ...params} : this.HTTP_OPT;
-    return this.httpClient.get(this.URL, opt)
+  public getExpenses(params: ExpensesFilter = {}) :Observable<ExpensesDto> {
+    const opt = typeof params !== 'undefined' ? {...this.HTTP_OPT, ...{params: params}} : this.HTTP_OPT;
+    return this.httpClient.get<ExpensesDto>(this.URL, opt);
   }
 
   /**
@@ -31,16 +39,16 @@ export class ExpenseService {
    * @returns {Observable<any>}
    */
   public getExpense(id: string) :Observable<any> {
-    return this.httpClient.get(`${this.URL}/${id}`, this.HTTP_OPT)
+    return this.httpClient.get(`${this.URL}/${id}`, this.HTTP_OPT);
   }
 
   /**
    * Add a new expense to dataBase
-   * @param {Expense} expense
+   * @param {ExpensePostDto} expense
    * @returns {Observable<Object>}
    */
-  public createExpense(expense: Expense) {
-    return this.httpClient.post(this.URL, expense, this.HTTP_OPT)
+  public createExpense(expense: ExpensePostDto) {
+    return this.httpClient.post(this.URL, expense, this.HTTP_OPT);
   }
 
   /**
@@ -50,7 +58,7 @@ export class ExpenseService {
    * @returns {Observable<Object>}
    */
   public modifyExpense(id: string, body: any) {
-    return this.httpClient.put(`${this.URL}/${id}`, body, this.HTTP_OPT)
+    return this.httpClient.put(`${this.URL}/${id}`, body, this.HTTP_OPT);
   }
 
   /**
@@ -59,6 +67,6 @@ export class ExpenseService {
    * @returns {Observable<Object>}
    */
   public removeExpense(id:string) {
-    return this.httpClient.delete(`${this.URL}/${id}`, this.HTTP_OPT)
+    return this.httpClient.delete(`${this.URL}/${id}`, this.HTTP_OPT);
   }
 }
