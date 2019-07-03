@@ -1,14 +1,21 @@
 import {NgModule} from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatTableModule} from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material';
+
 
 
 
 @NgModule({
   imports: [
-    MatProgressSpinnerModule
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ],
   exports: [
-    MatProgressSpinnerModule
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ]
 })
 

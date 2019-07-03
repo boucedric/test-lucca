@@ -1,2 +1,34 @@
-<p>expenses-list works!</p>
-<pre>{{expenses | json}}</pre>
+<div *ngIf="expenses && itemExpenses.length > 0" class="mat-elevation-z8">
+  <table mat-table [dataSource]="itemExpenses" class="expensesList-table">
+    <!-- purchasedOn Column -->
+    <ng-container matColumnDef="purchasedOn">
+      <th mat-header-cell *matHeaderCellDef>{{"expenses-list.date-col" | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{element.purchasedOn}} </td>
+    </ng-container>
+
+    <!-- nature Column -->
+    <ng-container matColumnDef="nature">
+      <th mat-header-cell *matHeaderCellDef>{{"expenses-list.nature-col" | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{element.nature}} </td>
+    </ng-container>
+
+    <!-- comment Column -->
+    <ng-container matColumnDef="comment">
+      <th mat-header-cell *matHeaderCellDef>{{"expenses-list.com-col" | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{element.comment}} </td>
+    </ng-container>
+
+    <!-- convertedAmount.amount Column -->
+    <ng-container matColumnDef="convertedAmount.amount">
+      <th mat-header-cell *matHeaderCellDef>{{"expenses-list.amount-col" | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{element.convertedAmount.amount}}€ </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<p *ngIf="itemExpenses.length === 0">{{"expenses-list.no-expense" | translate}}</p>
