@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ExpenseService} from "../expense.service";
-import {ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
+import {ExpenseDto, ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 import {finalize} from "rxjs/operators";
 
 @Component({
@@ -12,6 +12,8 @@ export class HomeComponent implements OnInit {
   private readonly DEFAULT_LIMIT = '5';
 
   public expensesToDisplay: ExpensesDto;
+
+  public expenseToModify: ExpenseDto;
 
   public isLoading: boolean = true;
 
@@ -51,25 +53,35 @@ export class HomeComponent implements OnInit {
           this.hasError = true;
         });
     }
-  }
-
-  public handleNewExpense(expense: ExpensePostDto) {
-    this.expenseService.createExpense(expense).subscribe(
-      (res) => {
-        this.updateExpenses();
-      },
-      (err) => {
-        this.hasError = true;
+    if (params.action === "MOD") {
+      this.expenseToModify = this.expensesToDisplay.items.find((item) => {
+        return item.id === params.id;
       });
+    }
   }
 
+  public clickToAddNewExpense() {
+    this.expenseToModify = null;
+  }
 
-  // this.expenseService.modifyExpense('015ea3e4-068a-4fd0-a1ba-05a01258f002', {comment: 'lol'}).subscribe(
-  //   (res) => {
-  //     console.log('success', res);
-  //   },
-  //   (err) => {
-  //     console.log('error', err);
-  //   });
-  
+  public handleFormExpense(params: {action: string, data: any, id?: string}) {
+    if (params.action === "CRE") {
+      this.expenseService.createExpense(params.data).subscribe(
+        (res) => {
+          this.updateExpenses();
+        },
+        (err) => {
+          this.hasError = true;
+        });
+    }
+    if (params.action = "MOD") {
+      this.expenseService.modifyExpense(params.id, params.data).subscribe(
+        (res) => {
+          this.updateExpenses();
+        },
+        (err) => {
+          this.hasError = true;
+        });
+    }
+  }
 }
