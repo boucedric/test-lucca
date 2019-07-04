@@ -1,8 +1,14 @@
-<app-create-expense [expenseItem]="expenseToModify" (formSubmitted)="handleFormExpense($event)"></app-create-expense>
-<h1>{{"home.title" | translate}}</h1>
-<button (click)="clickToAddNewExpense()" class="home-addBtn" mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
+<h1 *ngIf="!isFormDisplay">{{"home.title" | translate}}</h1>
+<h1 *ngIf="isFormDisplay">{{"home.form-title" | translate}}</h1>
+
+
+<app-create-expense [ngClass]="{'d-none': !isFormDisplay}" [expenseItem]="expenseToModify" (formSubmitted)="handleFormExpense($event)"></app-create-expense>
+
+<button *ngIf="!isFormDisplay" (click)="clickToAddNewExpense()" class="home-addBtn" mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
+<button *ngIf="isFormDisplay" (click)="hideForm()" class="home-addBtn" mat-raised-button color="primary">{{"home.return-btn" | translate}}</button>
+
 
 <mat-spinner *ngIf="isLoading && !hasError"></mat-spinner>
-<app-expenses-list *ngIf="!hasError" (expenseChanged)="handleExpenseChanged($event)" [expenses]="expensesToDisplay"></app-expenses-list>
+<app-expenses-list *ngIf="!hasError && !isFormDisplay" (expenseChanged)="handleExpenseChanged($event)" [expenses]="expensesToDisplay"></app-expenses-list>
 <p *ngIf="hasError">{{"error.default" | translate}}</p>
 

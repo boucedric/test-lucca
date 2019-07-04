@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
 
   public hasError: boolean = false;
 
+  public isFormDisplay: boolean = false;
+
   constructor(private expenseService: ExpenseService) { }
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class HomeComponent implements OnInit {
         });
     }
     if (params.action === "MOD") {
+      this.isFormDisplay = true;
       this.expenseToModify = this.expensesToDisplay.items.find((item) => {
         return item.id === params.id;
       });
@@ -61,12 +64,24 @@ export class HomeComponent implements OnInit {
   }
 
   public clickToAddNewExpense() {
+    this.isFormDisplay = true;
     this.expenseToModify = null;
   }
 
+  public hideForm() {
+    this.isFormDisplay = false;
+  }
+
   public handleFormExpense(params: {action: string, data: any, id?: string}) {
+    this.isFormDisplay = false;
     if (params.action === "CRE") {
-      this.expenseService.createExpense(params.data).subscribe(
+      this.expenseService.createExpense(params.data)
+        .pipe(
+          finalize(() => {
+            // Your code Here
+            this.isLoading = false;
+          })
+        ).subscribe(
         (res) => {
           this.updateExpenses();
         },
@@ -75,7 +90,13 @@ export class HomeComponent implements OnInit {
         });
     }
     if (params.action = "MOD") {
-      this.expenseService.modifyExpense(params.id, params.data).subscribe(
+      this.expenseService.modifyExpense(params.id, params.data)
+        .pipe(
+          finalize(() => {
+            // Your code Here
+            this.isLoading = false;
+          })
+        ).subscribe(
         (res) => {
           this.updateExpenses();
         },

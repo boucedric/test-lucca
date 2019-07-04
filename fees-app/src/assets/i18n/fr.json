@@ -2,7 +2,9 @@
   "title": "Test Lucca - notes de frais",
   "home": {
     "title": "Liste des depenses",
-    "add-btn": "Ajouter une depense"
+    "form-title": "Entrer les infos obligatoire",
+    "add-btn": "Ajouter une depense",
+    "return-btn": "Retour"
   },
   "create-expense": {
     "date-label": "Date",
