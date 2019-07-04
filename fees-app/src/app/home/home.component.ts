@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ExpenseService} from "../expense.service";
-import {ExpensesDto} from "../../model/ExpenseDto";
+import {ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 import {finalize} from "rxjs/operators";
 
 @Component({
@@ -52,13 +52,17 @@ export class HomeComponent implements OnInit {
         });
     }
   }
-  // this.expenseService.createExpense(expense).subscribe(
-  //   (res) => {
-  //     console.log('success', res);
-  //   },
-  //   (err) => {
-  //     console.log('error', err);
-  //   });
+
+  public handleNewExpense(expense: ExpensePostDto) {
+    this.expenseService.createExpense(expense).subscribe(
+      (res) => {
+        this.updateExpenses();
+      },
+      (err) => {
+        this.hasError = true;
+      });
+  }
+
 
   // this.expenseService.modifyExpense('015ea3e4-068a-4fd0-a1ba-05a01258f002', {comment: 'lol'}).subscribe(
   //   (res) => {
@@ -67,13 +71,5 @@ export class HomeComponent implements OnInit {
   //   (err) => {
   //     console.log('error', err);
   //   });
-
-  // this.expenseService.removeExpense('015ea3e4-068a-4fd0-a1ba-05a01258f002').subscribe(
-  //   (res) => {
-  //     console.log('success', res);
-  //   },
-  //   (err) => {
-  //     console.log('error', err);
-  //   });
-
+  
 }

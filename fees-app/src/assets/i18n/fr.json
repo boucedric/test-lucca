@@ -1,0 +1,27 @@
+{
+  "title": "Test Lucca - notes de frais",
+  "home": {
+    "title": "Liste des depenses",
+    "add-btn": "Ajouter une depense"
+  },
+  "create-expense": {
+    "date-label": "Date",
+    "nature-label": "Nature de la depense",
+    "com-label": "Description",
+    "amount-label": "Montant",
+    "currency-label": "devise"
+  },
+  "expenses-list": {
+    "no-expense": "Vous n'avez aucune depenses",
+    "date-col": "Date",
+    "nature-col": "Nature",
+    "com-col": "Description",
+    "amount-col": "Montant",
+    "modify-btn": "Editer",
+    "remove-btn": "Supprimer"
+  },
+  "error": {
+    "default": "Une erreur est survenue, veuillez reesayer ulterieurment",
+    "mandatory-field": "Le champs est obligatoire"
+  }
+}

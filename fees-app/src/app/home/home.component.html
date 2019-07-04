@@ -1,4 +1,8 @@
+<app-create-expense (formSubmitted)="handleNewExpense($event)"></app-create-expense>
 <h1>{{"home.title" | translate}}</h1>
+<button class="home-addBtn" mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
+
 <mat-spinner *ngIf="isLoading && !hasError"></mat-spinner>
 <app-expenses-list *ngIf="!hasError" (expenseChanged)="handleExpenseChanged($event)" [expenses]="expensesToDisplay"></app-expenses-list>
 <p *ngIf="hasError">{{"error.default" | translate}}</p>
+

@@ -7,18 +7,22 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { ExpensesListComponent } from './expenses-list/expenses-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 import {MaterialModule} from "./material.module";
 
 // import ngx-translate and the http loader
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { CreateExpenseComponent } from './create-expense/create-expense.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    ExpensesListComponent
+    ExpensesListComponent,
+    CreateExpenseComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +36,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
       }
     }),
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     MaterialModule
   ],
   providers: [],
