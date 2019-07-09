@@ -15,18 +15,24 @@
     <br/>
 
     <mat-form-field class="form-element">
-      <input matInput [placeholder]="'create-expense.nature-label' | translate" formControlName="nature">
-      <mat-error *ngIf="!formGroup.controls['nature'].valid && formGroup.controls['nature'].touched">
+      <input type="text" matInput [placeholder]="'create-expense.nature-label' | translate" formControlName="nature">
+      <mat-error *ngIf="!formGroup.controls['nature'].valid && !formGroup.controls['nature'].value && formGroup.controls['nature'].touched">
         {{ "error.mandatory-field" | translate }}
       </mat-error>
+      <mat-error *ngIf="formGroup.controls['nature'].hasError('maxlength')">
+          {{ "error.max-char" | translate: {nbMax: NATURE_MAX_CHAR} }}
+        </mat-error>
     </mat-form-field>
     <br/>
 
     <mat-form-field class="form-element">
       <input matInput [placeholder]="'create-expense.com-label' | translate" formControlName="comment">
-      <mat-error *ngIf="!formGroup.controls['comment'].valid && formGroup.controls['comment'].touched">
-        {{ "error.mandatory-field" | translate }}
-      </mat-error>
+      <mat-error *ngIf="!formGroup.controls['comment'].valid && !formGroup.controls['comment'].value && formGroup.controls['comment'].touched">
+          {{ "error.mandatory-field" | translate }}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls['comment'].hasError('maxlength')">
+            {{ "error.max-char" | translate: {nbMax: COMMENT_MAX_CHAR} }}
+          </mat-error>
     </mat-form-field>
     <br/>
 
@@ -39,6 +45,7 @@
         {{ "error.format-amount" | translate }}
         </mat-error>
     </mat-form-field>
+    <p *ngIf="convertedAmount">{{'create-expense.convert-info' | translate: convertedAmount}}</p>
     <br/>
 
     <mat-form-field class="form-element">

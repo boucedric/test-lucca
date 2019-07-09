@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
           this.hasError = true;
         });
     }
-    if (params.action = "MOD") {
+    if (params.action = "MOD" && params.id) {
       this.expenseService.modifyExpense(params.id, params.data)
         .pipe(
           finalize(() => {

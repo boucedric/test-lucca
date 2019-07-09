@@ -11,7 +11,8 @@
     "nature-label": "Nature de la dépense",
     "com-label": "Description",
     "amount-label": "Montant",
-    "currency-label": "devise"
+    "currency-label": "devise",
+    "convert-info": "Après conversion: {{amount}} {{currency}}"
   },
   "expenses-list": {
     "no-expense": "Vous n'avez aucune dépense",
@@ -27,6 +28,7 @@
     "mandatory-field": "Le champs est obligatoire",
     "invalid-date": "Choisir une date entre le 1 janvier 2000 et aujourd'hui",
     "format-date": "Format de date invalid (ex: 01/12/2018)",
-    "format-amount": "Montant invalid (ex: 123.99)"
+    "format-amount": "Montant invalid (ex: 123.99)",
+    "max-char": "Le nombre de caractère max est atteint ({{nbMax}})"
   }
 }

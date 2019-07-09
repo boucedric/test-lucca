@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AmountDetails } from '../../model/AmountDetails.interface';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,10 @@ export class CurrencyService {
 
   constructor() { }
 
-  public convert(from: AmountDetails, toCurrency: string) :AmountDetails {
-    return {amount: from.amount, currency: from.currency};
+  public convert(from: AmountDetails, toCurrency: string) : Observable<AmountDetails> {
+    // TODO do API call https://mobile.ilucca-dev.net/api/expenseItems
+    let fakeConvert = from.amount * Math.random();
+    fakeConvert = Math.round(fakeConvert * 100) / 100
+    return of({amount: fakeConvert, currency: toCurrency});
   }
 }

@@ -5,6 +5,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import * as moment from 'moment';
 import {CurrencyService} from '../service/currency.service'
+import { AmountDetails } from 'src/model/AmountDetails.interface';
 
 // Config for datepicker
 const MY_FORMATS = {
@@ -35,6 +36,9 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
   public minDate = new Date(2000, 0, 1);
   public maxDate = new Date();
 
+  public readonly NATURE_MAX_CHAR = 120;
+  public readonly COMMENT_MAX_CHAR = 600;
+
   // Available currencies
   public readonly CURRENCIES :any = [
   {value: 'EUR', viewValue: 'EUR'},
@@ -45,7 +49,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
 
   // 2 digits after comma
   private AMOUNT_REGEXP: string = '^[0-9]+(\.?[0-9]{1,2})?$';
-  
+
   /**
    * If Defined, edit specific item
    */
@@ -57,6 +61,9 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
    */
   @Output()
   public formSubmitted = new EventEmitter<any>();
+
+  // Used for estimation display 
+  public convertedAmount: AmountDetails;
 
 
   constructor(private formBuilder: FormBuilder, public currencyService: CurrencyService) { }
@@ -79,22 +86,43 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
     if (expense) {
       this.formGroup = this.formBuilder.group({
         'purchasedOn': [moment(expense.purchasedOn), [Validators.required]],
-        'nature': [expense.nature, Validators.required],
-        'comment': [expense.comment, [Validators.required]],
+        'nature': [expense.nature, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
+        'comment': [expense.comment, [Validators.required, Validators.maxLength(this.COMMENT_MAX_CHAR)]],
         'amount': [expense.originalAmount.amount, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
         'currency': [expense.originalAmount.currency, [Validators.required]]
       });
     } else {
       this.formGroup = this.formBuilder.group({
         'purchasedOn': [null, [Validators.required]],
-        'nature': [null, Validators.required],
-        'comment': [null, [Validators.required]],
+        'nature': [null, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
+        'comment': [null, [Validators.required, Validators.maxLength(this.COMMENT_MAX_CHAR)]],
         'amount': [null, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
         'currency': [null, [Validators.required]]
       });
     }
+    this.handleCurrencySuggestion();
   }
 
+  /**
+   * If amount || currency change and other than euro, do estimation
+   */
+  protected handleCurrencySuggestion(): void {
+    this.formGroup.valueChanges.subscribe((data) => {
+      if (data.amount || data.currency) {
+        const amount = data.amount;
+        const currency = data.currency;
+        if (this.formGroup.controls['amount'].valid
+        && this.formGroup.controls['currency'].valid
+        && this.formGroup.controls['currency'].value !== 'EUR') {
+          this.currencyService.convert({amount, currency}, 'EUR').subscribe((res) => {
+            this.convertedAmount = res;
+          });
+        } else {
+          this.convertedAmount = undefined;
+        }
+      }
+    });
+  }
 
   /**
    * Format data and send an event with the action to do (create or modify) and form data
@@ -106,19 +134,22 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
       nature: post.nature,
       comment: post.comment,
       originalAmount: {amount: post.amount, currency: post.currency},
-      convertedAmount: this.getConvertedAmount(post.amount, post.currency)
+      convertedAmount: this.convertedAmount || {amount: post.amount, currency: post.currency}
     };
     const mod = this.expenseItem ? "MOD" : "CRE";
-    console.log("onSubmit this.expenseItem", this.expenseItem);
-
-    console.log("onSubmit", mod);
-
     const id = this.expenseItem ? this.expenseItem.id : null;
     this.formSubmitted.emit({action: mod, data, id});
+    this.clearForm();
   }
 
-  public getConvertedAmount(originalAmount, currency) {
-    // TODO call api
-    return {amount: originalAmount, currency: 'EUR'}
+  /**
+   * Reset form data and errors
+   */
+  private clearForm(): void {
+    this.formGroup.reset();
+    Object.keys(this.formGroup.controls).forEach(key => {
+      this.formGroup.get(key).setErrors(null) ;
+    });
+    this.convertedAmount = undefined;
   }
 }
