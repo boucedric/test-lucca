@@ -39,10 +39,18 @@
     <br/>
 
     <mat-form-field class="form-element">
-      <input matInput [placeholder]="'create-expense.currency-label' | translate" formControlName="currency">
-      <mat-error *ngIf="!formGroup.controls['currency'].valid && formGroup.controls['currency'].touched">
-        {{ "error.mandatory-field" | translate }}
-      </mat-error>
+      <!-- <input matInput [placeholder]="'create-expense.currency-label' | translate" formControlName="currency">
+       -->
+
+      <mat-label>{{'create-expense.currency-label' | translate}}</mat-label>
+      <mat-select formControlName="currency">
+        <mat-option *ngFor="let currency of CURRENCIES" [value]="currency.value">
+          {{currency.viewValue}}
+        </mat-option>
+  </mat-select>
+  <mat-error *ngIf="!formGroup.controls['currency'].valid && formGroup.controls['currency'].touched">
+      {{ "error.mandatory-field" | translate }}
+    </mat-error>
     </mat-form-field>
     <br/>
 

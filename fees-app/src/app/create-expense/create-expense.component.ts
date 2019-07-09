@@ -6,7 +6,9 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as moment from 'moment';
 
 
-export const MY_FORMATS = {
+
+// Config for datepicker
+const MY_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
   },
@@ -28,17 +30,32 @@ export const MY_FORMATS = {
   ],
 })
 export class CreateExpenseComponent implements OnInit, OnChanges {
-
   public formGroup: FormGroup;
 
+  // Date picker max/min
   public minDate = new Date(2000, 0, 1);
   public maxDate = new Date();
 
+  // Available currencies
+  public readonly CURRENCIES :any = [
+  {value: 'EUR', viewValue: 'EUR'},
+  {value: 'USD', viewValue: 'USD'},
+  {value: 'GBP', viewValue: 'GBP'},
+  {value: 'CHF', viewValue: 'CHF'}
+];
+
+  /**
+   * If Defined, edit specific item
+   */
   @Input()
   public expenseItem: ExpenseDto;
 
+  /**
+   * Send an event on submit
+   */
   @Output()
   public formSubmitted = new EventEmitter<any>();
+
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -52,6 +69,10 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Init form
+   * @param expense 
+   */
   public createForm(expense?: ExpenseDto) {
     if (expense) {
       this.formGroup = this.formBuilder.group({
@@ -72,6 +93,11 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
     }
   }
 
+
+  /**
+   * Format data and send an event with the action to do (create or modify) and form data
+   * @param post 
+   */
   public onSubmit(post) {
     const data: ExpensePostDto = {
       purchasedOn: post.purchasedOn.format('YYYY-MM-DD'),
