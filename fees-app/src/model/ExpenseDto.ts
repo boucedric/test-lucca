@@ -1,16 +1,12 @@
+import { AmountDetails } from './AmountDetails.interface';
+
 export interface ExpenseDto {
   id: string,
   purchasedOn: string,
   nature: string,
   comment: string,
-  originalAmount:	{
-    amount: number,
-    currency: string,
-  },
-  convertedAmount: {
-    amount: number,
-    currency: string
-  },
+  originalAmount:	AmountDetails,
+  convertedAmount: AmountDetails,
   createdAt: string,
   lastModifiedAt: string
 }
@@ -24,12 +20,6 @@ export interface ExpensePostDto {
   purchasedOn: string,
   nature: string,
   comment: string,
-  originalAmount:	{
-    amount: number,
-    currency: string,
-  },
-  convertedAmount: {
-    amount: number,
-    currency: string
-  },
+  originalAmount:	AmountDetails,
+  convertedAmount: AmountDetails,
 }

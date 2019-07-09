@@ -1,15 +1,38 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ExpenseDto, ExpensePostDto} from "../../model/ExpenseDto";
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
+import * as moment from 'moment';
+
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-create-expense',
   templateUrl: './create-expense.component.html',
-  styleUrls: ['./create-expense.component.scss']
+  styleUrls: ['./create-expense.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class CreateExpenseComponent implements OnInit, OnChanges {
 
   public formGroup: FormGroup;
+
+  public minDate = new Date(2000, 0, 1);
+  public maxDate = new Date();
 
   @Input()
   public expenseItem: ExpenseDto;
@@ -32,7 +55,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
   public createForm(expense?: ExpenseDto) {
     if (expense) {
       this.formGroup = this.formBuilder.group({
-        'purchasedOn': [expense.purchasedOn, [Validators.required]],
+        'purchasedOn': [moment(expense.purchasedOn), [Validators.required]],
         'nature': [expense.nature, Validators.required],
         'comment': [expense.comment, [Validators.required]],
         'amount': [expense.originalAmount.amount, [Validators.required]],
@@ -51,7 +74,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
 
   public onSubmit(post) {
     const data: ExpensePostDto = {
-      purchasedOn: post.purchasedOn,
+      purchasedOn: post.purchasedOn.format('YYYY-MM-DD'),
       nature: post.nature,
       comment: post.comment,
       originalAmount: {amount: post.amount, currency: post.currency},

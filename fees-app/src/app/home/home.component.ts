@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ExpenseService} from "../expense.service";
+import {ExpenseService} from "../service/expense.service";
 import {ExpenseDto, ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 import {finalize} from "rxjs/operators";
 
