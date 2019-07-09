@@ -26,6 +26,7 @@
     "default": "Une erreur est survenue, veuillez réesayer ulterieurment",
     "mandatory-field": "Le champs est obligatoire",
     "invalid-date": "Choisir une date entre le 1 janvier 2000 et aujourd'hui",
-    "format-date": "Format de date invalid (ex: 01/12/2018)"
+    "format-date": "Format de date invalid (ex: 01/12/2018)",
+    "format-amount": "Montant invalid (ex: 123.99)"
   }
 }

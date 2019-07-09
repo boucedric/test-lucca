@@ -4,8 +4,7 @@ import {ExpenseDto, ExpensePostDto} from "../../model/ExpenseDto";
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import * as moment from 'moment';
-
-
+import {CurrencyService} from '../service/currency.service'
 
 // Config for datepicker
 const MY_FORMATS = {
@@ -44,6 +43,9 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
   {value: 'CHF', viewValue: 'CHF'}
 ];
 
+  // 2 digits after comma
+  private AMOUNT_REGEXP: string = '^[0-9]+(\.?[0-9]{1,2})?$';
+  
   /**
    * If Defined, edit specific item
    */
@@ -57,7 +59,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
   public formSubmitted = new EventEmitter<any>();
 
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, public currencyService: CurrencyService) { }
 
   ngOnInit() {
     this.createForm();
@@ -79,7 +81,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
         'purchasedOn': [moment(expense.purchasedOn), [Validators.required]],
         'nature': [expense.nature, Validators.required],
         'comment': [expense.comment, [Validators.required]],
-        'amount': [expense.originalAmount.amount, [Validators.required]],
+        'amount': [expense.originalAmount.amount, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
         'currency': [expense.originalAmount.currency, [Validators.required]]
       });
     } else {
@@ -87,7 +89,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
         'purchasedOn': [null, [Validators.required]],
         'nature': [null, Validators.required],
         'comment': [null, [Validators.required]],
-        'amount': [null, [Validators.required]],
+        'amount': [null, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
         'currency': [null, [Validators.required]]
       });
     }
