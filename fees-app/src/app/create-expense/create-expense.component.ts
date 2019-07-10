@@ -89,7 +89,7 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
       comment: expense && expense.comment || null,
       amount: expense && expense.originalAmount.amount || null,
       currency: expense && expense.originalAmount.currency || null
-    }
+    };
     this.formGroup = this.formBuilder.group({
       'purchasedOn': [initFormExpense.purchasedOn, [Validators.required]],
       'nature': [initFormExpense.nature, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
@@ -109,8 +109,9 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
       const amount = this.formGroup.controls['amount'].value;
       const currency = this.formGroup.controls['currency'].value;
       if (this.formGroup.controls['amount'].valid
-      && this.formGroup.controls['currency'].valid
-      && this.formGroup.controls['currency'].value !== 'EUR') {
+        && this.formGroup.controls['currency'].valid
+        && this.formGroup.controls['currency'].value
+        && this.formGroup.controls['currency'].value !== 'EUR') {
         this.currencyService.convert({amount, currency}, 'EUR').subscribe((res) => {
           this.convertedAmount = res;
         });

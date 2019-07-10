@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ExpenseService} from "../service/expense.service";
 import {ExpenseDto, ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 import {finalize} from "rxjs/operators";
@@ -9,27 +9,34 @@ import {finalize} from "rxjs/operators";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  // Default config for nb expense at init
   private readonly DEFAULT_LIMIT = '5';
+  public defaultPageLength = 5;
 
+  // List of expenses
   public expensesToDisplay: ExpensesDto;
-
+  // specific expense
   public expenseToModify: ExpenseDto;
-
+  //view status
   public isLoading: boolean = true;
-
   public hasError: boolean = false;
-
   public isFormDisplay: boolean = false;
 
-  constructor(private expenseService: ExpenseService) { }
+  constructor(private expenseService: ExpenseService) {
+  }
 
   ngOnInit() {
     this.updateExpenses();
   }
 
-  private updateExpenses() {
+  /**
+   * Get all expenses or a group of expenses and update the view
+   * @param params
+   */
+  private updateExpenses(params?: any) {
+    const queryParams = params || {limit: this.DEFAULT_LIMIT};
     this.isLoading = true;
-    this.expenseService.getExpenses({limit: this.DEFAULT_LIMIT})
+    this.expenseService.getExpenses(queryParams)
       .pipe(
         finalize(() => {
           // Your code Here
@@ -37,15 +44,20 @@ export class HomeComponent implements OnInit {
         })
       )
       .subscribe(
-      (res: ExpensesDto) => {
-        this.expensesToDisplay = res;
-      },
-      () => {
-        this.hasError = true;
-      });
+        (res: ExpensesDto) => {
+          this.expensesToDisplay = res;
+          this.defaultPageLength = res.count;
+        },
+        () => {
+          this.hasError = true;
+        });
   }
 
-  public handleExpenseChanged(params: {id: string, action: string}){
+  /**
+   * Edit or remove and expense depending action event
+   * @param params
+   */
+  public handleExpenseChanged(params: { id: string, action: string }) {
     if (params.action === "DEL") {
       this.expenseService.removeExpense(params.id).subscribe(
         () => {
@@ -63,16 +75,38 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Display form to create a new expense
+   */
   public clickToAddNewExpense() {
     this.isFormDisplay = true;
     this.expenseToModify = null;
   }
 
+  /**
+   * Hide form and display expenses-list
+   */
   public hideForm() {
     this.isFormDisplay = false;
   }
 
-  public handleFormExpense(params: {action: string, data: any, id?: string}) {
+  /**
+   * Handle events from mat-paginator and update expenses depending paginator criteria
+   * @param event
+   */
+  public handleDisplayPage(event) {
+    const params = {
+      offset: event.pageIndex * event.pageSize, // jump to x element
+      limit: event.pageSize // limit number of result
+    };
+    this.updateExpenses(params);
+  }
+
+  /**
+   * Handle submit info event for a new expense or editing specific expense
+   * @param params
+   */
+  public handleFormExpense(params: { action: string, data: any, id?: string }) {
     this.isFormDisplay = false;
     if (params.action === "CRE") {
       this.expenseService.createExpense(params.data)
@@ -89,7 +123,7 @@ export class HomeComponent implements OnInit {
           this.hasError = true;
         });
     }
-    if (params.action = "MOD" && params.id) {
+    if (params.action === "MOD" && params.id) {
       this.expenseService.modifyExpense(params.id, params.data)
         .pipe(
           finalize(() => {

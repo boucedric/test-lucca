@@ -9,6 +9,11 @@
 
 
 <mat-spinner *ngIf="isLoading && !hasError"></mat-spinner>
-<app-expenses-list *ngIf="!hasError && !isFormDisplay" (expenseChanged)="handleExpenseChanged($event)" [expenses]="expensesToDisplay"></app-expenses-list>
+<app-expenses-list *ngIf="!hasError && !isFormDisplay"
+                   (expenseChanged)="handleExpenseChanged($event)"
+                   (displayPageChange)="handleDisplayPage($event)"
+                   [expenses]="expensesToDisplay"
+                   [defaultLength]="defaultPageLength"></app-expenses-list>
+
 <p *ngIf="hasError">{{"error.default" | translate}}</p>
 

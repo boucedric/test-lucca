@@ -1,9 +1,10 @@
 <div *ngIf="expenses && itemExpenses.length > 0" class="mat-elevation-z8">
-  <table mat-table [dataSource]="itemExpenses" class="expensesList-table">
+  <table mat-table [dataSource]="itemExpenses" class="expensesList-table"
+         [ngClass]="{'expenseList--hideContent': isLoading}">
     <!-- purchasedOn Column -->
     <ng-container matColumnDef="purchasedOn">
       <th mat-header-cell *matHeaderCellDef>{{"expenses-list.date-col" | translate}}</th>
-      <td mat-cell *matCellDef="let element"> {{element.purchasedOn}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.purchasedOn | date : 'shortDate'}} </td>
     </ng-container>
 
     <!-- nature Column -->
@@ -21,23 +22,28 @@
     <!-- originalAmount Column -->
     <ng-container matColumnDef="originalAmount">
       <th mat-header-cell *matHeaderCellDef>{{"expenses-list.amount-col" | translate}}</th>
-      <td mat-cell *matCellDef="let element"> {{element.originalAmount.amount}} {{element.originalAmount.currency}} <span *ngIf="element.originalAmount.currency !== 'EUR'"> ({{element.convertedAmount.amount}} {{element.convertedAmount.currency}})</span> </td>
+      <td mat-cell *matCellDef="let element"> {{element.originalAmount.amount}} {{element.originalAmount.currency}}
+        <span
+          *ngIf="element.originalAmount.currency !== 'EUR'"> ({{element.convertedAmount.amount}} {{element.convertedAmount.currency}}
+          )</span></td>
     </ng-container>
 
     <!-- convertedAmount.amount Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <button class="expensesList-btn" mat-raised-button (click)="modifyItem(element.id)">{{"expenses-list.modify-btn" | translate}}</button>
-        <button class="expensesList-btn" mat-raised-button color="warn" (click)="deleteItem(element.id)">{{"expenses-list.remove-btn" | translate}}</button>
+        <button class="expensesList-btn" mat-raised-button
+                (click)="modifyItem(element.id)">{{"expenses-list.modify-btn" | translate}}</button>
+        <button class="expensesList-btn" mat-raised-button color="warn"
+                (click)="deleteItem(element.id)">{{"expenses-list.remove-btn" | translate}}</button>
       </td>
     </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [length]="defaultLength" [pageSize]="defaultPageSize" [pageSizeOptions]="NB_ITEM_BY_PAGE_CONF"
+                 showFirstLastButtons (page)="handlePageEvent($event)"></mat-paginator>
 </div>
 
 <p *ngIf="itemExpenses.length === 0">{{"expenses-list.no-expense" | translate}}</p>

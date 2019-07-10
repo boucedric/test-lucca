@@ -8,6 +8,11 @@ import { HomeComponent } from './home/home.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { ExpensesListComponent } from './expenses-list/expenses-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
+
 
 
 import {MaterialModule} from "./material.module";
@@ -39,7 +44,9 @@ import { CreateExpenseComponent } from './create-expense/create-expense.componen
     ReactiveFormsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    {provide: LOCALE_ID, useValue: "fr-FR"}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
