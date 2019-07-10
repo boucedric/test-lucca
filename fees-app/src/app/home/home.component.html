@@ -1,0 +1,24 @@
+<h1 *ngIf="!isFormDisplay">{{"home.title" | translate}}</h1>
+<h1 *ngIf="isFormDisplay">{{"home.form-title" | translate}}</h1>
+
+
+<app-create-expense [ngClass]="{'d-none': !isFormDisplay}" [expenseItem]="expenseToModify" (formSubmitted)="handleFormExpense($event)"></app-create-expense>
+
+<div *ngIf="!isFormDisplay" class="home-container">
+  <button (click)="clickToAddNewExpense()"  mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
+</div>
+
+<div *ngIf="isFormDisplay" class="home-container">
+  <button *ngIf="isFormDisplay" (click)="hideForm()" mat-raised-button color="primary">{{"home.return-btn" | translate}}</button>
+</div>
+
+<mat-spinner *ngIf="isLoading && !hasError" class="home-loader"></mat-spinner>
+
+<app-expenses-list *ngIf="!hasError && !isFormDisplay"
+                   (expenseChanged)="handleExpenseChanged($event)"
+                   (displayPageChange)="handleDisplayPage($event)"
+                   [expenses]="expensesToDisplay"
+                   [defaultLength]="defaultPageLength"></app-expenses-list>
+
+<p *ngIf="hasError">{{"error.default" | translate}}</p>
+

@@ -1,0 +1,35 @@
+{
+  "title": "Test Lucca - notes de frais",
+  "home": {
+    "title": "Liste des dépenses",
+    "form-title": "Entrer les infos obligatoire",
+    "add-btn": "Ajouter une dépense",
+    "return-btn": "Retour"
+  },
+  "create-expense": {
+    "date-label": "Date",
+    "nature-label": "Nature de la dépense",
+    "com-label": "Description",
+    "amount-label": "Montant",
+    "currency-label": "devise",
+    "convert-info": "Après conversion: {{amount}} {{currency}}"
+  },
+  "expenses-list": {
+    "no-expense": "Vous n'avez aucune dépense",
+    "date-col": "Date",
+    "nature-col": "Nature",
+    "com-col": "Description",
+    "amount-col": "Montant",
+    "converted-amount": "Montant convertis",
+    "modify-btn": "Editer",
+    "remove-btn": "Supprimer"
+  },
+  "error": {
+    "default": "Une erreur est survenue, veuillez réesayer ulterieurment",
+    "mandatory-field": "Le champs est obligatoire",
+    "invalid-date": "Choisir une date entre le 1 janvier 2000 et aujourd'hui",
+    "format-date": "Format de date invalid (ex: 01/12/2018)",
+    "format-amount": "Montant invalid (ex: 123.99)",
+    "max-char": "Le nombre de caractère max est atteint ({{nbMax}})"
+  }
+}
