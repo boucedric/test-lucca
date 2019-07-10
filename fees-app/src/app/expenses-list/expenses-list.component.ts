@@ -64,4 +64,79 @@ export class ExpensesListComponent implements OnInit, OnChanges {
     this.isLoading = true;
     this.displayPageChange.emit(event);
   }
+
+  /**
+   * Sort expenses depending direction and column (active)
+   * @param event
+   */
+  public handleSortChange(event: { active: string, direction: string }) {
+    switch (event.active) {
+      case 'nature':
+      case 'comment':
+        // Order Alphabeticaly
+        this.sortAlphaOrDigit(event);
+        break;
+      case 'purchasedOn':
+        // Order by date
+        this.sortByDate(event);
+        break;
+      case 'originalAmount':
+        // Order by price
+        this.sortAlphaOrDigit(event);
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Order by Alphabetically or Number
+   * @param event
+   */
+  private sortAlphaOrDigit(event: { active: string, direction: string }) {
+    if (event.direction === '') {
+      return;
+    }
+    if (event.direction === 'asc') {
+      this.itemExpenses.sort((a, b) => {
+        if (event.active === 'originalAmount') {
+          return (a['originalAmount'].amount > b['originalAmount'].amount) ? 1 : ((b['originalAmount'].amount > a['originalAmount'].amount) ? -1 : 0);
+        } else {
+          return (a[event.active].localeCompare(b[event.active], 'fr', {ignorePunctuation: true}));
+        }
+      });
+      this.itemExpenses = this.itemExpenses.slice();
+    } else {
+      // desc
+      this.itemExpenses.sort((a, b) => {
+        if (event.active === 'originalAmount') {
+          return (a['originalAmount'].amount < b['originalAmount'].amount) ? 1 : ((b['originalAmount'].amount < a['originalAmount'].amount) ? -1 : 0);
+        } else {
+          return - (a[event.active].localeCompare(b[event.active], 'fr', {ignorePunctuation: true}));
+        }
+      });
+      this.itemExpenses = this.itemExpenses.slice();
+    }
+  }
+
+  /**
+   * Order by date
+   * @param event
+   */
+  private sortByDate(event: { active: string, direction: string }) {
+    if (event.direction === '') {
+      return;
+    }
+    this.itemExpenses.sort((a, b) => {
+      const aDate = new Date(a.purchasedOn);
+      const bDate = new Date(b.purchasedOn);
+      if (event.direction === 'asc') {
+        return aDate > bDate ? 1 : bDate > aDate ? -1 : 0;
+      } else {
+        return aDate < bDate ? 1 : bDate < aDate ? -1 : 0;
+      }
+    });
+    this.itemExpenses = this.itemExpenses.slice();
+  }
+
 }
