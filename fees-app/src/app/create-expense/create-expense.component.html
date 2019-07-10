@@ -1,7 +1,7 @@
-<mat-card>
+<mat-card class="createExpense-card">
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
 
-    <mat-form-field class="form-element">
+    <mat-form-field class="createExpense-formElem">
       <input matInput [min]="minDate" [max]="maxDate" formControlName="purchasedOn" [matDatepicker]="picker"
              [placeholder]="'create-expense.date-label' | translate">
       <mat-error
@@ -16,7 +16,7 @@
     </mat-form-field>
     <br/>
 
-    <mat-form-field class="form-element">
+    <mat-form-field class="createExpense-formElem">
       <input type="text" matInput [placeholder]="'create-expense.nature-label' | translate" formControlName="nature">
       <mat-error
         *ngIf="!formGroup.controls['nature'].valid && !formGroup.controls['nature'].value && formGroup.controls['nature'].touched">
@@ -28,7 +28,7 @@
     </mat-form-field>
     <br/>
 
-    <mat-form-field class="form-element">
+    <mat-form-field class="createExpense-formElem">
       <input matInput [placeholder]="'create-expense.com-label' | translate" formControlName="comment">
       <mat-error
         *ngIf="!formGroup.controls['comment'].valid && !formGroup.controls['comment'].value && formGroup.controls['comment'].touched">
@@ -40,7 +40,7 @@
     </mat-form-field>
     <br/>
 
-    <mat-form-field class="form-element">
+    <mat-form-field class="createExpense-formElem">
       <input matInput [placeholder]="'create-expense.amount-label' | translate" formControlName="amount">
       <mat-error
         *ngIf="!formGroup.controls['amount'].valid && !formGroup.controls['amount'].value && formGroup.controls['amount'].touched">
@@ -53,7 +53,7 @@
     <p *ngIf="convertedAmount">{{'create-expense.convert-info' | translate: convertedAmount}}</p>
     <br/>
 
-    <mat-form-field class="form-element">
+    <mat-form-field class="createExpense-formElem">
       <mat-label>{{'create-expense.currency-label' | translate}}</mat-label>
       <mat-select formControlName="currency">
         <mat-option *ngFor="let currency of currencyService.AVAILABLE_CURRENCIES" [value]="currency.value">
@@ -66,8 +66,8 @@
     </mat-form-field>
     <br/>
 
-    <div class="form-element">
-      <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Submit Form
+    <div class="createExpense-formElem">
+      <button mat-raised-button color="accent" type="submit" class="button" [disabled]="!formGroup.valid">Submit Form
       </button>
     </div>
 

@@ -8,7 +8,7 @@ import {CurrencyService} from '../service/currency.service'
 import { AmountDetails } from 'src/model/AmountDetails.interface';
 
 // Config for datepicker
-const MY_FORMATS = {
+const CUSTOM_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
   },
@@ -26,7 +26,7 @@ const MY_FORMATS = {
   styleUrls: ['./create-expense.component.scss'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
   ],
 })
 export class CreateExpenseComponent implements OnInit, OnChanges {
@@ -140,9 +140,9 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
       originalAmount: {amount: post.amount, currency: post.currency},
       convertedAmount: this.convertedAmount || {amount: post.amount, currency: post.currency}
     };
-    const mod = this.expenseItem ? "MOD" : "CRE";
+    const actionType = this.expenseItem ? "MOD" : "CRE";
     const id = this.expenseItem ? this.expenseItem.id : null;
-    this.formSubmitted.emit({action: mod, data, id});
+    this.formSubmitted.emit({action: actionType, data, id});
     this.clearForm();
   }
 

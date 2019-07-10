@@ -73,16 +73,13 @@ export class ExpensesListComponent implements OnInit, OnChanges {
     switch (event.active) {
       case 'nature':
       case 'comment':
+      case 'originalAmount':
         // Order Alphabeticaly
         this.sortAlphaOrDigit(event);
         break;
       case 'purchasedOn':
         // Order by date
         this.sortByDate(event);
-        break;
-      case 'originalAmount':
-        // Order by price
-        this.sortAlphaOrDigit(event);
         break;
       default:
         break;
@@ -95,28 +92,24 @@ export class ExpensesListComponent implements OnInit, OnChanges {
    */
   private sortAlphaOrDigit(event: { active: string, direction: string }) {
     if (event.direction === '') {
-      return;
+      return; // Do nothing
     }
-    if (event.direction === 'asc') {
-      this.itemExpenses.sort((a, b) => {
-        if (event.active === 'originalAmount') {
-          return (a['originalAmount'].amount > b['originalAmount'].amount) ? 1 : ((b['originalAmount'].amount > a['originalAmount'].amount) ? -1 : 0);
-        } else {
-          return (a[event.active].localeCompare(b[event.active], 'fr', {ignorePunctuation: true}));
-        }
-      });
-      this.itemExpenses = this.itemExpenses.slice();
-    } else {
-      // desc
-      this.itemExpenses.sort((a, b) => {
-        if (event.active === 'originalAmount') {
-          return (a['originalAmount'].amount < b['originalAmount'].amount) ? 1 : ((b['originalAmount'].amount < a['originalAmount'].amount) ? -1 : 0);
-        } else {
-          return - (a[event.active].localeCompare(b[event.active], 'fr', {ignorePunctuation: true}));
-        }
-      });
-      this.itemExpenses = this.itemExpenses.slice();
-    }
+
+    this.itemExpenses.sort((a, b) => {
+      const aKey = event.active === 'originalAmount' ? a.originalAmount.amount : a[event.active];
+      const bKey = event.active === 'originalAmount' ? b.originalAmount.amount : b[event.active];
+      if (typeof aKey === 'number') {
+        return (event.direction === 'desc')
+          ? (aKey > bKey ? 1 : ((bKey > aKey) ? -1 : 0))
+          : (aKey < bKey ? 1 : ((bKey < aKey) ? -1 : 0)); // asc
+      }
+      if (typeof aKey === 'string') {
+        const direction = (event.direction === 'desc') ? 1 : -1;
+        return direction * (aKey.localeCompare(bKey, 'fr', {ignorePunctuation: true}));
+      }
+    });
+
+    this.itemExpenses = this.itemExpenses.slice();
   }
 
   /**
@@ -130,7 +123,7 @@ export class ExpensesListComponent implements OnInit, OnChanges {
     this.itemExpenses.sort((a, b) => {
       const aDate = new Date(a.purchasedOn);
       const bDate = new Date(b.purchasedOn);
-      if (event.direction === 'asc') {
+      if (event.direction === 'desc') {
         return aDate > bDate ? 1 : bDate > aDate ? -1 : 0;
       } else {
         return aDate < bDate ? 1 : bDate < aDate ? -1 : 0;

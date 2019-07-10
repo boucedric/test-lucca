@@ -4,9 +4,12 @@ import { HttpHeaders } from '@angular/common/http';
 import {Observable} from "rxjs/internal/Observable";
 import {ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 
+/**
+ * Available query params for API
+ */
 export interface ExpensesFilter {
-  offset?: string,
-  limit?: string,
+  offset?: string | Number,
+  limit?: string | Number,
   purchasedOn?: string,
   createdAt?: string,
   lastModifiedAt?: string
@@ -29,17 +32,8 @@ export class ExpenseService {
    * @returns {Observable<Object>}
    */
   public getExpenses(params: ExpensesFilter = {}) :Observable<ExpensesDto> {
-    const opt = typeof params !== 'undefined' ? {...this.HTTP_OPT, ...{params: params}} : this.HTTP_OPT;
+    const opt = Object.keys(params).length ? {...this.HTTP_OPT, ...{params: params}} : this.HTTP_OPT;
     return this.httpClient.get<ExpensesDto>(this.URL, opt);
-  }
-
-  /**
-   * Return a specific expense
-   * @param {string} id
-   * @returns {Observable<any>}
-   */
-  public getExpense(id: string) :Observable<any> {
-    return this.httpClient.get(`${this.URL}/${id}`, this.HTTP_OPT);
   }
 
   /**

@@ -4,11 +4,16 @@
 
 <app-create-expense [ngClass]="{'d-none': !isFormDisplay}" [expenseItem]="expenseToModify" (formSubmitted)="handleFormExpense($event)"></app-create-expense>
 
-<button *ngIf="!isFormDisplay" (click)="clickToAddNewExpense()" class="home-addBtn" mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
-<button *ngIf="isFormDisplay" (click)="hideForm()" class="home-addBtn" mat-raised-button color="primary">{{"home.return-btn" | translate}}</button>
+<div *ngIf="!isFormDisplay" class="home-container">
+  <button (click)="clickToAddNewExpense()"  mat-raised-button color="primary">{{"home.add-btn" | translate}}</button>
+</div>
 
+<div *ngIf="isFormDisplay" class="home-container">
+  <button *ngIf="isFormDisplay" (click)="hideForm()" mat-raised-button color="primary">{{"home.return-btn" | translate}}</button>
+</div>
 
-<mat-spinner *ngIf="isLoading && !hasError"></mat-spinner>
+<mat-spinner *ngIf="isLoading && !hasError" class="home-loader"></mat-spinner>
+
 <app-expenses-list *ngIf="!hasError && !isFormDisplay"
                    (expenseChanged)="handleExpenseChanged($event)"
                    (displayPageChange)="handleDisplayPage($event)"

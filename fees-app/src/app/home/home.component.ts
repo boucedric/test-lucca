@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ExpenseService} from "../service/expense.service";
+import {ExpenseService, ExpensesFilter} from "../service/expense.service";
 import {ExpenseDto, ExpensePostDto, ExpensesDto} from "../../model/ExpenseDto";
 import {finalize} from "rxjs/operators";
 
@@ -34,12 +34,11 @@ export class HomeComponent implements OnInit {
    * @param params
    */
   private updateExpenses(params?: any) {
-    const queryParams = params || {limit: this.DEFAULT_LIMIT};
+    const queryParams: ExpensesFilter = params || {limit: this.DEFAULT_LIMIT};
     this.isLoading = true;
     this.expenseService.getExpenses(queryParams)
       .pipe(
         finalize(() => {
-          // Your code Here
           this.isLoading = false;
         })
       )
@@ -95,7 +94,7 @@ export class HomeComponent implements OnInit {
    * @param event
    */
   public handleDisplayPage(event) {
-    const params = {
+    const params: ExpensesFilter = {
       offset: event.pageIndex * event.pageSize, // jump to x element
       limit: event.pageSize // limit number of result
     };
@@ -112,14 +111,13 @@ export class HomeComponent implements OnInit {
       this.expenseService.createExpense(params.data)
         .pipe(
           finalize(() => {
-            // Your code Here
             this.isLoading = false;
           })
         ).subscribe(
-        (res) => {
+        () => {
           this.updateExpenses();
         },
-        (err) => {
+        () => {
           this.hasError = true;
         });
     }
@@ -127,14 +125,13 @@ export class HomeComponent implements OnInit {
       this.expenseService.modifyExpense(params.id, params.data)
         .pipe(
           finalize(() => {
-            // Your code Here
             this.isLoading = false;
           })
         ).subscribe(
-        (res) => {
+        () => {
           this.updateExpenses();
         },
-        (err) => {
+        () => {
           this.hasError = true;
         });
     }
