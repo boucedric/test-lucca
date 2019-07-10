@@ -83,23 +83,21 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
    * @param expense 
    */
   public createForm(expense?: ExpenseDto) {
-    if (expense) {
-      this.formGroup = this.formBuilder.group({
-        'purchasedOn': [moment(expense.purchasedOn), [Validators.required]],
-        'nature': [expense.nature, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
-        'comment': [expense.comment, [Validators.required, Validators.maxLength(this.COMMENT_MAX_CHAR)]],
-        'amount': [expense.originalAmount.amount, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
-        'currency': [expense.originalAmount.currency, [Validators.required]]
-      });
-    } else {
-      this.formGroup = this.formBuilder.group({
-        'purchasedOn': [null, [Validators.required]],
-        'nature': [null, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
-        'comment': [null, [Validators.required, Validators.maxLength(this.COMMENT_MAX_CHAR)]],
-        'amount': [null, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
-        'currency': [null, [Validators.required]]
-      });
+    const initFormExpense = {
+      purchasedOn: expense ? moment(expense.purchasedOn) : null,
+      nature: expense && expense.nature || null,
+      comment: expense && expense.comment || null,
+      amount: expense && expense.originalAmount.amount || null,
+      currency: expense && expense.originalAmount.currency || null
     }
+    this.formGroup = this.formBuilder.group({
+      'purchasedOn': [initFormExpense.purchasedOn, [Validators.required]],
+      'nature': [initFormExpense.nature, [Validators.required, Validators.maxLength(this.NATURE_MAX_CHAR)]],
+      'comment': [initFormExpense.comment, [Validators.required, Validators.maxLength(this.COMMENT_MAX_CHAR)]],
+      'amount': [initFormExpense.amount, [Validators.required, Validators.pattern(this.AMOUNT_REGEXP)]],
+      'currency': [initFormExpense.currency, [Validators.required]]
+    });
+    
     this.handleCurrencySuggestion();
   }
 
@@ -107,20 +105,25 @@ export class CreateExpenseComponent implements OnInit, OnChanges {
    * If amount || currency change and other than euro, do estimation
    */
   protected handleCurrencySuggestion(): void {
-    this.formGroup.valueChanges.subscribe((data) => {
-      if (data.amount || data.currency) {
-        const amount = data.amount;
-        const currency = data.currency;
-        if (this.formGroup.controls['amount'].valid
-        && this.formGroup.controls['currency'].valid
-        && this.formGroup.controls['currency'].value !== 'EUR') {
-          this.currencyService.convert({amount, currency}, 'EUR').subscribe((res) => {
-            this.convertedAmount = res;
-          });
-        } else {
-          this.convertedAmount = undefined;
-        }
+    const handleCurrency = () => {
+      const amount = this.formGroup.controls['amount'].value;
+      const currency = this.formGroup.controls['currency'].value;
+      if (this.formGroup.controls['amount'].valid
+      && this.formGroup.controls['currency'].valid
+      && this.formGroup.controls['currency'].value !== 'EUR') {
+        this.currencyService.convert({amount, currency}, 'EUR').subscribe((res) => {
+          this.convertedAmount = res;
+        });
+      } else {
+        this.convertedAmount = undefined;
       }
+    };
+    
+    this.formGroup.get('amount').valueChanges.subscribe(() => {
+      handleCurrency();
+    });
+    this.formGroup.get('currency').valueChanges.subscribe(() => {
+      handleCurrency();
     });
   }
 

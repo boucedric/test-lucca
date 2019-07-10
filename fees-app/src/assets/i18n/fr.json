@@ -20,6 +20,7 @@
     "nature-col": "Nature",
     "com-col": "Description",
     "amount-col": "Montant",
+    "converted-amount": "Montant convertis",
     "modify-btn": "Editer",
     "remove-btn": "Supprimer"
   },

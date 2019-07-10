@@ -12,7 +12,7 @@ export class ExpensesListComponent implements OnInit, OnChanges {
 
   public itemExpenses: ExpenseDto[] = [];
 
-  public displayedColumns: string[] = ['purchasedOn', "nature", "comment", "convertedAmount.amount", "id"];
+  public displayedColumns: string[] = ['purchasedOn', "nature", "comment", "originalAmount", "id"];
   constructor() { }
 
   @Output()
